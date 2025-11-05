@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / compiled files
+*.pyc
+__pycache__/
+*.o
+*.a
+*.so
+
+# Environments
+.env
+venv/
+env/
+# For poetry
+.venv/
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Media and Static files (if collected locally and not meant for version control)
+/media/
+/static_collected/
+
+# IDE-specific files (e.g., PyCharm, VS Code)
+.idea/
+.vscode/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Django-specific logs and temporary files
+*.log
+*.pot
+
+# Local settings (containing sensitive info like SECRET_KEY)
+local_settings.py
+
+# Coverage reports
+.coverage
+
+# Tox (testing framework)
+.tox/
+
+# Eggs (Python packaging)
+.eggs/
