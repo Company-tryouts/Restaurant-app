@@ -1,53 +1,42 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}Sign Up - HomeBite{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="min-h-[90vh] flex justify-center items-center bg-cover bg-center" 
-     style="background-image: url('{% static "accounts/images/auth_page.jpg" %}');">
+<div class="container mt-5" style="max-width: 400px;">
+    <h2 class="mb-4 text-center">Sign Up</h2>
+    <form method="post" class="bg-dark p-4 rounded shadow">
+        {% csrf_token %}
 
-  <!-- Form Container -->
-  <div class="bg-gray-900 text-white rounded-2xl shadow-2xl p-6 w-full max-w-sm backdrop-blur-sm">
-    <h2 class="text-2xl font-semibold text-center mb-6 tracking-wide">Sign Up</h2>
+        <!-- Username -->
+        <div class="mb-3">
+            <label for="id_username" class="form-label text-light">Username</label>
+            <input type="text" name="username" maxlength="150" class="form-control" id="id_username">
+        </div>
 
-    <form method="post" class="space-y-4">
-      {% csrf_token %}
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="id_email" class="form-label text-light">Email</label>
+            <input type="email" name="email" class="form-control" id="id_email">
+        </div>
 
-      {% for field in form %}
-      <div class="flex flex-col">
-        <label for="{{ field.id_for_label }}" class="mb-2 font-medium text-sm tracking-wide">{{ field.label }}</label>
-        {{ field }}
-        <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById("{{ field.id_for_label }}");
-            if (input) {
-              input.classList.add(
-                "bg-gray-900", "text-white", "rounded-lg",
-                "py-2", "px-3", "focus:outline-none",
-                "focus:ring-2", "focus:ring-white",
-                "placeholder-gray-400", "border", "border-gray-700",
-                "transition", "duration-200", "w-full"
-              );
-            }
-          });
-        </script>
-        {% if field.errors %}
-          <p class="text-red-400 text-xs mt-1">{{ field.errors.0 }}</p>
-        {% endif %}
-      </div>
-      {% endfor %}
+        <!-- Password -->
+        <div class="mb-3">
+            <label for="id_password1" class="form-label text-light">Password</label>
+            <input type="password" name="password1" class="form-control" id="id_password1">
+        </div>
 
-      <button type="submit" class="w-full bg-white text-black font-semibold py-2 rounded-lg hover:bg-gray-200 transition duration-200">
-        Sign Up
-      </button>
+        <!-- Confirm Password -->
+        <div class="mb-3">
+            <label for="id_password2" class="form-label text-light">Confirm Password</label>
+            <input type="password" name="password2" class="form-control" id="id_password2">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
     </form>
 
-    <div class="mt-4 text-center text-sm text-gray-300">
-      <span>Already have an account?
-        <a href="{% url 'login' %}" class="text-white hover:text-gray-200 underline">Login</a>
-      </span>
+    <div class="mt-3 text-center">
+        <span>Already have an account? <a href="{% url 'login' %}" class="text-info">Login</a></span>
     </div>
-  </div>
 </div>
 {% endblock %}
