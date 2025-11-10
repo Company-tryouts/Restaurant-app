@@ -61,7 +61,7 @@ class TimeStampedModel(models.Model):
 
 
 
-class Review(models.Model, TimeStampedModel):
+class Review(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField()
@@ -77,7 +77,7 @@ class Review(models.Model, TimeStampedModel):
 
 
 
-class Bookmark(models.Model, TimeStampedModel):
+class Bookmark(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarks')
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='bookmarked_by')
 
