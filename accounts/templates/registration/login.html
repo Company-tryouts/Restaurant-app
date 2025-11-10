@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login - HomeBite
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 400px;">
+    <h2 class="mb-3 text-center">Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Display errors if any -->
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            Please correct the errors below.
+        </div>
+        {% endif %}
+        
+        <!-- Render form fields -->
+        {{ form.as_p }}
+        
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+    </form>
+
+    <div class="mt-3 text-center">
+        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </div>
+
+    
+    <div class="mt-3 text-center">
+        <span>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></span>
+    </div>
+</div>
+{% endblock %}

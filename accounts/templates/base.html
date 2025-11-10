@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HomeBite{% endblock %}</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <style>
+    /* Top bar with dark theme */
+    .top-bar {
+      width: 100%;
+      height: 80px;
+      background-color: #000; /* black background */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    a, a:hover {
+      color: white;
+      text-decoration: none;
+    }
+
+    .dropdown-menu {
+      background-color: #ffffff; /* pure white */
+      color: #000000; /* black text */
+      border: 1px solid #555; /* gives shape */
+    }
+
+    .dropdown-menu a {
+      color: #000000; /* text stays black */
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #c7c7c7 /* light grey hover */
+      color: #000000;
+    }
+
+
+
+    body {
+      background-color: #000; /* black background */
+      color: white;
+    }
+
+    .btn-outline-primary {
+      border-color: white;
+      color: white;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: white;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Top bar -->
+  <div class="top-bar">
+    <!-- Left: Logo + HomeBite text -->
+    <div class="brand">
+      <i class="bi bi-shop"></i> 
+      <span>HomeBite</span>
+    </div>
+
+    <!-- Right: Auth links / profile dropdown -->
+    <div>
+      {% if user.is_authenticated %}
+        <div class="dropdown">
+          <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle fs-4"></i> &nbsp; {{ user.username }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item">Logout</button>
+                </form>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a>
+            </li>
+
+          </ul>
+        </div>
+      {% else %}
+        <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-sm me-2">Sign Up</a>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
