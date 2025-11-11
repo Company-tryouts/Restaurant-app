@@ -23,7 +23,7 @@ urlpatterns = [
 
     # Password reset
     path('password/reset/', 
-        views.CustomPasswordResetView.as_view(
+        auth_views.PasswordResetView.as_view(
             template_name="registration/password_reset_form.html",       # form user sees
             email_template_name="registration/password_reset_email.html", # HTML email
             subject_template_name="registration/password_reset_subject.txt"
