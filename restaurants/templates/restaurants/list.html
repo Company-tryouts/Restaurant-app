@@ -5,7 +5,9 @@
 <h1 class="text-3xl font-bold mt-6 mb-4 text-gray-100">Restaurants</h1>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
   {% for restaurant in restaurants %}
+    <a href="{{ restaurant.get_absolute_url }}">
     {% include "restaurant_card.html" %}
+    </a>
   {% endfor %}
 </div>
 
