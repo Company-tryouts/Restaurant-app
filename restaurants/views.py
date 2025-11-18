@@ -15,5 +15,3 @@ class RestaurantListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset().prefetch_related('images')  # fetch images to avoid extra queries
         return qs
-
-
