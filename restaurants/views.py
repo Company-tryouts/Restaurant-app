@@ -16,12 +16,10 @@ class RestaurantListView(ListView):
         qs = super().get_queryset().prefetch_related('images')  # fetch images to avoid extra queries
         return qs
 
-
 class RestaurantDetailView(DetailView):
     model = Restaurant
     template_name = "restaurants/detail.html"  
     context_object_name = "restaurant"
-
 
     def get_queryset(self):
         return super().get_queryset().prefetch_related('images', 'cuisines')
