@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Menu - HomeBite{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-10">{{ restaurant.name }} Menu</h1>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  {% for food in foods %}
+    <div class="bg-gray-900 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between mb-6">
+      
+      <!-- Food image -->
+        {% if food.image %}
+        <img src="{{ food.image.url }}" alt="{{ food.name }}" class="w-full h-40 object-cover">
+        {% else %}
+        <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No image" class="w-full h-40 object-cover">
+        {% endif %}
+
+
+      <div class="p-2 pt-3 flex justify-between items-center">
+        <h2 class="font-bold text-base">{{ food.name }}</h2>
+        <span class="bg-green-500 text-white px-3 py-1 rounded-md font-semibold text-sm">
+          ₹{{ food.price }}
+        </span>
+      </div>
+
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
