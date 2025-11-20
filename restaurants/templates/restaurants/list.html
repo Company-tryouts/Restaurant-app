@@ -2,12 +2,16 @@
 
 
 {% block content %}
-<h1 class="text-3xl font-bold mt-6 mb-4 text-gray-100">Restaurants</h1>
+<div class="flex items-center justify-between mt-6 mb-4">
+  <h1 class="text-3xl font-bold text-gray-100">Restaurants</h1>
+  <!-- Bookmark filter icon -->
+  <button id="bookmarkFilterBtn" class="text-gray-300 hover:text-yellow-400">
+    <i class="bi bi-bookmark-fill text-xl"></i>
+  </button>
+</div>
 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
   {% for restaurant in restaurants %}
-    <a href="{{ restaurant.get_absolute_url }}">
     {% include "restaurant_card.html" %}
-    </a>
   {% endfor %}
 </div>
 
@@ -15,4 +19,57 @@
 <div class="mt-6">
   {% include "pagination.html" %}
 </div>
+
+<script>
+let filterActive = false;  // must be declared first
+
+function toggleBookmark(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const btn = event.currentTarget;
+    const restaurantId = btn.dataset.id;
+
+    fetch("{% url 'restaurants:toggle_bookmark' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ restaurant_id: restaurantId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const icon = btn.querySelector("i");
+        if (data.bookmarked) {
+            icon.classList.remove("bi-bookmark");
+            icon.classList.add("bi-bookmark-fill", "text-yellow-400");
+            btn.closest('.restaurant-card').dataset.bookmarked = "true"; // update attribute
+        } else {
+            icon.classList.remove("bi-bookmark-fill", "text-yellow-400");
+            icon.classList.add("bi-bookmark", "text-gray-300");
+            btn.closest('.restaurant-card').dataset.bookmarked = "false"; // update attribute
+        }
+    });
+}
+
+// ===== Bookmark Filter Button =====
+const bookmarkFilterBtn = document.getElementById("bookmarkFilterBtn");
+
+bookmarkFilterBtn.addEventListener("click", () => {
+    filterActive = !filterActive; // toggle filter state
+
+    // toggle icon color
+    bookmarkFilterBtn.querySelector("i").classList.toggle("text-yellow-400", filterActive);
+
+    // filter restaurant cards
+    const cards = document.querySelectorAll(".restaurant-card");
+    cards.forEach(card => {
+        const isBookmarked = card.dataset.bookmarked === "true";
+        card.style.display = filterActive ? (isBookmarked ? "block" : "none") : "block";
+    });
+});
+</script>
+
+
 {% endblock %}
