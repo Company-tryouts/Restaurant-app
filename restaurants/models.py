@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 
 class TimeStampedModel(models.Model):
@@ -37,6 +38,9 @@ class Restaurant(TimeStampedModel):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse("restaurants:restaurant_detail", kwargs={"pk": self.pk})
 
 
 class Food(TimeStampedModel):

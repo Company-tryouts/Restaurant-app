@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Restaurant
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 # Create your views here.
 
@@ -15,3 +15,11 @@ class RestaurantListView(ListView):
     def get_queryset(self):
         qs = super().get_queryset().prefetch_related('images')  # fetch images to avoid extra queries
         return qs
+
+class RestaurantDetailView(DetailView):
+    model = Restaurant
+    template_name = "restaurants/detail.html"  
+    context_object_name = "restaurant"
+
+    def get_queryset(self):
+        return super().get_queryset().prefetch_related('images', 'cuisines')
