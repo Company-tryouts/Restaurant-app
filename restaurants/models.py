@@ -41,7 +41,9 @@ class Restaurant(TimeStampedModel):
     
     def get_absolute_url(self):
         return reverse("restaurants:restaurant_detail", kwargs={"pk": self.pk})
-
+    
+    def get_foods_url(self):
+        return reverse("restaurants:restaurant_foods", kwargs={"restaurant_id": self.pk})
 
 class Food(TimeStampedModel):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu')
