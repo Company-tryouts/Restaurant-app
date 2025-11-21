@@ -13,15 +13,8 @@ class RestaurantListView(ListView):
     ordering = ['-average_rating']
 
     def get_queryset(self):
-        qs = super().get_queryset().prefetch_related('images')  # fetch images to avoid extra queries
-        if self.request.user.is_authenticated:
-            from django.db.models import Exists, OuterRef
-            user_bookmarks = Bookmark.objects.filter(user=self.request.user, restaurant=OuterRef('pk'))
-            qs = qs.annotate(is_bookmarkrd=Exists(user_bookmarks))
-        else :
-            from django.db.models import Value, BooleanField
-            qs = qs.annotate(is_bookmarked=Value(False, output_field=BooleanField()))
-        return qs 
+        qs = super().get_queryset().prefetch_related('images').with_user_bookmarks(self.request.user)
+        return qs
 
 class RestaurantDetailView(DetailView):
     model = Restaurant
