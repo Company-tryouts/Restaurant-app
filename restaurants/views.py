@@ -67,7 +67,10 @@ def toggle_bookmark(request):
 @login_required
 def toggle_visited(request):
     restaurant_id = request.POST.get("restaurant_id")
-    restaurant = Restaurant.objects.get(id=restaurant_id)
+    try:
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+    except (TypeError, ValueError, Restaurant.DoesNotExist):
+        return JsonResponse({"error": "Invalid restaurant ID"}, status=400)
 
     visited, created = Visited.objects.get_or_create(
         user=request.user,
