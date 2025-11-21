@@ -22,9 +22,9 @@ class RestaurantDetailView(DetailView):
     context_object_name = "restaurant"
 
     def get_queryset(self):
-        qs=super().get_queryset().prefetch_related('images', 'cuisines').with_user_visited(self.request.user)
+        qs = super().get_queryset().prefetch_related('images', 'cuisines').with_user_visited(self.request.user)
         return qs 
-    
+
 class FoodListView(ListView):
     model = Food
     template_name = "foods/list.html"
@@ -68,7 +68,10 @@ def toggle_bookmark(request):
 @login_required
 def toggle_visited(request):
     restaurant_id = request.POST.get("restaurant_id")
-    restaurant = Restaurant.objects.get(id=restaurant_id)
+    try:
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+    except (TypeError, ValueError, Restaurant.DoesNotExist):
+        return JsonResponse({"error": "Invalid restaurant ID"}, status=400)
 
     visited, created = Visited.objects.get_or_create(
         user=request.user,
