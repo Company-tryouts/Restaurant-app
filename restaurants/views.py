@@ -22,8 +22,8 @@ class RestaurantDetailView(DetailView):
     context_object_name = "restaurant"
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('images', 'cuisines') 
-
+        return super().get_queryset().prefetch_related('images', 'cuisines')
+    
 class FoodListView(ListView):
     model = Food
     template_name = "foods/list.html"
