@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-
+from .managers import RestaurantQuerySet
 
 class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  
@@ -22,23 +22,6 @@ class DietType(models.IntegerChoices):
     VEG = 1, 'Vegetarian'
     NON_VEG = 2, 'Non-Vegetarian'
     VEGAN = 3, 'Vegan'
-
-class RestaurantQuerySet(models.QuerySet):
-    def with_user_bookmarks(self, user):
-        from django.db.models import Exists, OuterRef, Value, BooleanField
-        from restaurants.models import Bookmark  
-
-        if user.is_authenticated:
-            user_bookmarks = Bookmark.objects.filter(
-                user=user,
-                restaurant=OuterRef('pk')
-            )
-            return self.annotate(
-                is_bookmarked=Exists(user_bookmarks)
-            )
-        return self.annotate(
-            is_bookmarked=Value(False, output_field=BooleanField()))
-
 
 class Restaurant(TimeStampedModel):
     name = models.CharField(max_length=200, unique=True)  
