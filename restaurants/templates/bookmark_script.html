@@ -67,26 +67,4 @@ bookmarkFilterBtn.addEventListener("click", () => {
     });
 });
 
-let visitedFilterActive = false;
-
-const visitedFilterBtn = document.getElementById("visitedFilterBtn");
-
-visitedFilterBtn.addEventListener("click", () => {
-  visitedFilterActive = !visitedFilterActive;
-
-  visitedFilterBtn.querySelector("i")
-    .classList.toggle("text-yellow-400", visitedFilterActive);
-
-    document.querySelectorAll(".restaurant-card").forEach(card => {
-        const link = card.closest("a");
-        const isVisited = card.dataset.visited === "true";
-
-        if (visitedFilterActive && !isVisited) {
-            link.classList.add("hidden");
-        } else {
-            link.classList.remove("hidden");
-        }
-    });
-});
-
 </script>
