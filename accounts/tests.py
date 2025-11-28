@@ -1,9 +1,20 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core import mail
 
+@override_settings(
+    DATABASES={
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    },
+    PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"],
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+)
 class SignUpTestCase(TestCase):
+
     def test_signup_page_loads(self):
         url = reverse('signup')
         response = self.client.get(url)
@@ -31,6 +42,16 @@ class SignUpTestCase(TestCase):
         self.assertEqual(response.status_code, 200)  
         self.assertFalse(User.objects.filter(username='newuser2').exists())
 
+@override_settings(
+    DATABASES={
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    },
+    PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"],
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+)
 class LoginLogoutTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='StrongPass123!')
@@ -67,6 +88,16 @@ class LoginLogoutTestCase(TestCase):
         self.assertEqual(response.status_code, 302)  
         self.assertFalse('_auth_user_id' in self.client.session) 
 
+@override_settings(
+    DATABASES={
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    },
+    PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"],
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+)
 class PasswordChangeTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='OldPass123!')
@@ -102,6 +133,16 @@ class PasswordChangeTestCase(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)  
 
+@override_settings(
+    DATABASES={
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
+    },
+    PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"],
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+)
 class PasswordResetTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', email='test@example.com', password='OldPass123!')
