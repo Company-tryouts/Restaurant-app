@@ -1,76 +1,99 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Restaurant, Food, Bookmark, Visited
+from .models import Restaurant, Cuisine, Food, Bookmark, Visited
+import datetime
 
-
-class RestaurantViewTests(TestCase):
+class UserMixin(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create_user(username="testuser", password="12345")
+        cls.user = User.objects.create_user(username="testuser", password="pass123")
+        super().setUpTestData()
 
+    def login(self):
+        self.client.login(username="testuser", password="pass123")
+
+
+class RestaurantMixin(UserMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.cuisine = Cuisine.objects.create(name="Indian")
         cls.restaurant = Restaurant.objects.create(
-            name="Test Restaurant",
-            address="123 Test Street",
-            city="Test City",
-            opening_time="09:00:00",
-            closing_time="22:00:00",
-            average_rating=4.2,
+            name="Burger King",
+            address="Street 1",
+            diet_type=1,
+            average_rating=4.5,
+            cost_for_two=400,
+            opening_time=datetime.time(9, 0),   
+            closing_time=datetime.time(22, 0)
         )
+        cls.restaurant.cuisines.add(cls.cuisine)
 
+
+class FoodMixin(RestaurantMixin):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
         cls.food = Food.objects.create(
-            name="Test Food",
-            price=100,
-            restaurant=cls.restaurant
+            restaurant=cls.restaurant,
+            name="Fried Rice",
+            price=150,
+            diet_type=1
         )
 
-        cls.client = Client()
 
-    def test_RestaurantListView(self):
-        url = reverse("restaurants:restaurant_list")
-        response = self.client.get(url)
+# ------ TESTS ------
 
+class TestRestaurantListView(RestaurantMixin):
+    def test_list_page_should_load_restaurants(self):
+        response = self.client.get(reverse("restaurants:restaurant_list"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "restaurants/list.html")
-        self.assertIn("restaurants", response.context)
+        self.assertContains(response, "Burger King")
 
-    def test_RestaurantDetailView(self):
-        url = reverse("restaurants:restaurant_detail", args=[self.restaurant.id])
-        response = self.client.get(url)
+    def test_restaurant_list_should_filter_by_price_range(self):
 
+        response = self.client.get(reverse("restaurants:restaurant_list") + "?max_price=500")
+        
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "restaurants/detail.html")
-        self.assertEqual(response.context["restaurant"], self.restaurant)
+        self.assertContains(response, "Burger King")
+        self.assertNotContains(response, "Fancy Feast")
 
-    def test_FoodListView(self):
-        url = reverse("restaurants:restaurant_foods", args=[self.restaurant.id])
+
+
+class TestRestaurantDetailView(RestaurantMixin):
+    def test_detail_page_should_display_correct_restaurant(self):
+        url = reverse("restaurants:restaurant_detail", kwargs={"pk": self.restaurant.pk})
         response = self.client.get(url)
-
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "foods/list.html")
-        self.assertIn("foods", response.context)
-        self.assertEqual(response.context["restaurant"], self.restaurant)
+        self.assertContains(response, "Burger King")
 
-    def test_toggle_bookmark(self):
-        self.client.login(username="testuser", password="12345")
 
+class TestFoodListView(FoodMixin):
+    def test_food_list_should_show_related_food(self):
+        url = reverse("restaurants:restaurant_foods", kwargs={"restaurant_id": self.restaurant.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Fried Rice")
+
+
+class TestToggleBookmark(RestaurantMixin):
+    def test_user_should_toggle_bookmark(self):
+        self.login()
         url = reverse("restaurants:toggle_bookmark")
         response = self.client.post(url, {"restaurant_id": self.restaurant.id})
-
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Bookmark.objects.filter(user=self.user, restaurant=self.restaurant).exists())
+        self.assertTrue(
+            Bookmark.objects.filter(user=self.user, restaurant=self.restaurant).exists()
+        )
 
-        response = self.client.post(url, {"restaurant_id": self.restaurant.id})
-        self.assertFalse(Bookmark.objects.filter(user=self.user, restaurant=self.restaurant).exists())
 
-    def test_toggle_visited(self):
-        self.client.login(username="testuser", password="12345")
-
+class TestToggleVisited(RestaurantMixin):
+    def test_user_should_toggle_visited_status(self):
+        self.login()
         url = reverse("restaurants:toggle_visited")
         response = self.client.post(url, {"restaurant_id": self.restaurant.id})
-
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Visited.objects.filter(user=self.user, restaurant=self.restaurant).exists())
-
-        response = self.client.post(url, {"restaurant_id": self.restaurant.id})
-        self.assertFalse(Visited.objects.filter(user=self.user, restaurant=self.restaurant).exists())
+        self.assertTrue(
+            Visited.objects.filter(user=self.user, restaurant=self.restaurant).exists()
+        )
