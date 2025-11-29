@@ -3,47 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Restaurant, Cuisine, Food, Bookmark, Visited
 import datetime
-
-class UserMixin(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user(username="testuser", password="pass123")
-        super().setUpTestData()
-
-    def login(self):
-        self.client.login(username="testuser", password="pass123")
-
-
-class RestaurantMixin(UserMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.cuisine = Cuisine.objects.create(name="Indian")
-        cls.restaurant = Restaurant.objects.create(
-            name="Burger King",
-            address="Street 1",
-            diet_type=1,
-            average_rating=4.5,
-            cost_for_two=400,
-            opening_time=datetime.time(9, 0),   
-            closing_time=datetime.time(22, 0)
-        )
-        cls.restaurant.cuisines.add(cls.cuisine)
-
-
-class FoodMixin(RestaurantMixin):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-        cls.food = Food.objects.create(
-            restaurant=cls.restaurant,
-            name="Fried Rice",
-            price=150,
-            diet_type=1
-        )
-
-
-# ------ TESTS ------
+from tests.mixins import UserMixin, RestaurantMixin, FoodMixin
 
 class TestRestaurantListView(RestaurantMixin):
     def test_list_page_should_load_restaurants(self):

@@ -4,17 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-
-# Mixin for creating and logging in a user
-class UserMixin:
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user(username="testuser", password="pass123", email="testuser@example.com")
-        super().setUpTestData()
-
-    def login(self):
-        self.client.login(username="testuser", password="pass123")
-
+from tests.mixins import UserMixin
 
 class TestLoginView(UserMixin, TestCase):
 
