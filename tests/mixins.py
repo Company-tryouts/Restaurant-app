@@ -2,6 +2,7 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from restaurants.models import Restaurant, Cuisine, Food
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 # -----------------------------
 # User setup mixin
@@ -32,7 +33,8 @@ class RestaurantMixin(UserMixin):
         cls.cuisine = Cuisine.objects.create(name="Indian")
 
         # Sample restaurant
-        cls.restaurant = Restaurant.objects.create(
+        cls.restaurants = [
+            Restaurant.objects.create(
             name="Burger King",
             address="Street 1",
             diet_type=1,  # integer for DietType choices
@@ -40,8 +42,11 @@ class RestaurantMixin(UserMixin):
             cost_for_two=400,
             opening_time=datetime.time(9, 0),
             closing_time=datetime.time(22, 0)
-        )
+        )]
+        cls.restaurant = cls.restaurants[0]
         cls.restaurant.cuisines.add(cls.cuisine)
+        img = SimpleUploadedFile("test.jpg", b"fake-image-content", content_type="image/jpeg")
+        cls.restaurant.images.create(image=img)
 
 
 # -----------------------------
