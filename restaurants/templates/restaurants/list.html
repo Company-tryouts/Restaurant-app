@@ -6,6 +6,8 @@
     <h1 class="text-3xl font-bold mt-6 mb-4 text-gray-100">Restaurants</h1>
 
     <div class="flex items-center gap-4">
+        {% include "sorters.html" %}
+
         {% include "filters.html" %}
 
         <button id="visitedFilterBtn" class="text-gray-300 hover:text-yellow-400">
@@ -32,4 +34,5 @@
 {% include "bookmark_script.html" %}
 {% include "visited_script.html" %}
 {% include "filter_script.html" %}
+{% include "sorters_script.html" %}
 {% endblock %}

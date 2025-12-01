@@ -1,0 +1,29 @@
+<script>
+const sortBtn = document.getElementById("sortBtn");
+const sortDropdown = document.getElementById("sortDropdown");
+const sortPriceBtn = document.getElementById("sortPriceBtn");
+const sortPriceDropdown = document.getElementById("sortPriceDropdown");
+
+sortBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    sortDropdown.classList.toggle("hidden");
+    sortPriceDropdown.classList.add("hidden");
+});
+
+sortPriceBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+    sortPriceDropdown.classList.toggle("hidden");
+});
+
+document.addEventListener("click", () => {
+    sortDropdown.classList.add("hidden");
+    sortPriceDropdown.classList.add("hidden");
+});
+
+sortDropdown.addEventListener("click", (e) => {
+    e.stopPropagation();
+});
+sortPriceDropdown.addEventListener("click", (e) => {
+    e.stopPropagation();
+});
+</script>
