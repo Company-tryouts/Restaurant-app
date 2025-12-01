@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const dietDropdown = document.getElementById("dietDropdown");
     const cuisineBtn = document.getElementById("cuisineBtn");
     const cuisineDropdown = document.getElementById("cuisineDropdown");
+    const ratingBtn = document.getElementById("ratingBtn");
+    const ratingDropdown = document.getElementById("ratingDropdown");
 
     if (!filterBtn || !priceDropdown || !applyPriceBtn || !grid || !dietBtn || !dietDropdown || !cuisineBtn || !cuisineDropdown) return; // safety check
 
@@ -38,6 +40,11 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!cuisineDropdown.contains(e.target) && !cuisineBtn.contains(e.target)) {
             cuisineDropdown.classList.add("hidden");
         }
+    });
+
+    ratingBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        ratingDropdown.classList.toggle("hidden");
     });
 });
 </script>
