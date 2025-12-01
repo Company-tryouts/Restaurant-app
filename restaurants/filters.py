@@ -27,6 +27,8 @@ class RestaurantFilter(django_filters.FilterSet):
         choices=[
             ('price_low', 'Low → High'),
             ('price_high', 'High → Low'),
+            ('rating_high', 'High → Low'),
+            ('rating_low', 'Low → High'),
         ],
         empty_label=None
     )
@@ -40,4 +42,8 @@ class RestaurantFilter(django_filters.FilterSet):
             return queryset.order_by("cost_for_two")
         if value == "price_high":
             return queryset.order_by("-cost_for_two")
+        if value == "rating_high":
+            return queryset.order_by("-average_rating")
+        if value == "rating_low":
+            return queryset.order_by("average_rating")
         return queryset
