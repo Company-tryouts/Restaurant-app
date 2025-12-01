@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Restaurant, Food, Cuisine, Bookmark, Visited, Review
+from .models import Restaurant, Food, Cuisine, Bookmark, Visited, Review, DietType
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.db.models import Count, Avg
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -19,6 +19,12 @@ class RestaurantListView(FilterView):
     def get_queryset(self):
         qs = super().get_queryset().prefetch_related('images').with_user_bookmarks(self.request.user).with_user_visited(self.request.user)
         return qs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        diet_map = {1: "Veg", 2: "Non Veg", 3: "Vegan"}
+        context['diet_choices'] = [(value, diet_map[value]) for value, _ in DietType.choices]
+        return context
 
 class RestaurantDetailView(DetailView):
     model = Restaurant
