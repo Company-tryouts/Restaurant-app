@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.test import TestCase
 from .models import Bookmark, Visited
-from restaurants.test_restaurants.mixins import RestaurantTestSetupMixin, FullInteractionMixin
+from restaurants.test_restaurants.mixins import RestaurantTestSetupMixin
 
 class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
     def test_list_page_should_load_restaurants(self):
