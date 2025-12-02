@@ -21,6 +21,8 @@ class RestaurantFilter(django_filters.FilterSet):
         choices=[(n, n) for n in range(1, 6)],  # 1 to 5 stars
         lookup_expr="exact"
     )
+
+    is_spotlight = django_filters.BooleanFilter(field_name="is_spotlight")
     
     sort_by = django_filters.ChoiceFilter(
         method="sort_by_price",
@@ -42,7 +44,7 @@ class RestaurantFilter(django_filters.FilterSet):
 
     class Meta:
         model = Restaurant
-        fields = ['cost_for_two_min', 'cost_for_two_max', 'diet_type', 'cuisines', 'rating']
+        fields = ['cost_for_two_min', 'cost_for_two_max', 'diet_type', 'cuisines', 'rating', 'is_spotlight']
 
     def sort_by_price(self, queryset, name, value):
         if value == "price_low":
