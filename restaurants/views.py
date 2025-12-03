@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Restaurant, Food, Cuisine, Bookmark, Visited, Review, DietType
+from .models import Restaurant, Food, Cuisine, Bookmark, Visited, Review
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.db.models import Count, Avg
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
