@@ -54,11 +54,10 @@
 
             <div id="cuisineDropdown" class="absolute right-full top-0 mr-2 w-48 max-h-60 bg-gray-900 text-white p-3 rounded shadow-lg hidden z-50 overflow-y-auto">
                 <form method="get" action="{% url 'restaurants:restaurant_list' %}">
-                    {% for cuisine in cuisines %}
+                    {% for value, label in filter.form.fields.cuisines.choices %}
                     <label class="flex items-center gap-2 mb-1">
-                        <input type="checkbox" name="cuisines" value="{{ cuisine.id }}"
-                        {% if cuisine.id|stringformat:"s" in selected_cuisines %}checked{% endif %}>
-                        {{ cuisine.name }}
+                        <input type="checkbox" name="cuisines" value="{{ value }}">
+                        {{ label }}
                     </label>
                     {% endfor %}
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded font-semibold mt-2">
