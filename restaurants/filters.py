@@ -16,6 +16,12 @@ class RestaurantFilter(django_filters.FilterSet):
         widget=forms.CheckboxSelectMultiple
     )
 
+    rating = django_filters.MultipleChoiceFilter(
+        field_name="average_rating",
+        choices=[(n, n) for n in range(1, 6)],  # 1 to 5 stars
+        lookup_expr="exact"
+    )
+
     class Meta:
         model = Restaurant
-        fields = ['cost_for_two_min', 'cost_for_two_max', 'diet_type', 'cuisines']
+        fields = ['cost_for_two_min', 'cost_for_two_max', 'diet_type', 'cuisines', 'rating']
