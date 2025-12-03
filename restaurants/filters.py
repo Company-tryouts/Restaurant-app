@@ -23,7 +23,7 @@ class RestaurantFilter(django_filters.FilterSet):
     )
     
     sort_by = django_filters.ChoiceFilter(
-        method="filter_by_sort",
+        method="sort_by_price",
         choices=[
             ('price_low', 'Low → High'),
             ('price_high', 'High → Low'),
@@ -35,7 +35,7 @@ class RestaurantFilter(django_filters.FilterSet):
         model = Restaurant
         fields = ['cost_for_two_min', 'cost_for_two_max', 'diet_type', 'cuisines', 'rating']
 
-    def filter_by_sort(self, queryset, name, value):
+    def sort_by_price(self, queryset, name, value):
         if value == "price_low":
             return queryset.order_by("cost_for_two")
         if value == "price_high":
