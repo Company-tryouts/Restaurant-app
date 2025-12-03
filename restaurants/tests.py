@@ -58,6 +58,37 @@ class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
         for r in excluded:
             self.assertNotContains(response, r.name)
 
+    def test_rating_filter_should_include_selected_rating(self):
+        response = self.client.get(reverse("restaurants:restaurant_list"), {"rating": ["5"]})
+
+        expected = [r for r in self.restaurants if int(r.average_rating) == 5]
+
+        unexpected = [r for r in self.restaurants if int(r.average_rating) != 5]
+
+        for r in expected:
+            self.assertContains(response, r.name)
+
+        for r in unexpected:
+            self.assertNotContains(response, r.name)
+
+
+    def test_rating_filter_should_exclude_unselected_ratings(self):
+        response = self.client.get(reverse("restaurants:restaurant_list"), {"rating": ["4"]})
+        
+        excluded = [r for r in self.restaurants if int(r.average_rating) != 4]
+
+        for r in excluded:
+            self.assertNotContains(response, r.name)
+
+    def test_rating_filter_should_support_multiple_selected_ratings(self):
+        response = self.client.get(reverse("restaurants:restaurant_list"), {"rating": ["3", "5"]})
+
+        included = [r for r in self.restaurants if int(r.average_rating) in [3, 5]]
+        
+        for r in included:
+            self.assertContains(response, r.name)
+
+
 class TestRestaurantDetailView(RestaurantTestSetupMixin, TestCase):
     def test_detail_page_should_display_correct_restaurant(self):
         url = reverse("restaurants:restaurant_detail", kwargs={"pk": self.restaurant.pk})
