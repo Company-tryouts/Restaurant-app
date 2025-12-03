@@ -6,14 +6,14 @@
     <div data-dropdown="{{ dropdown_id }}" id="{{ dropdown_id }}" class="absolute right-full top-0 mr-2 w-40 bg-gray-900 text-white p-3 rounded shadow-lg hidden z-50">
         <form method="get" action="{% url 'restaurants:restaurant_list' %}">
 
-            {% for option in options %}
+            {% for value, label in filter.form.sort_by.field.choices %}
             <label class="flex items-center gap-2 mb-2 cursor-pointer">
                 <input 
                     type="radio" 
                     name="sort_by" 
-                    value="{{ option.value }}"
-                    {% if selected_sort == option.value %}checked{% endif %}>
-                {{ option.label }}
+                    value="{{ value }}"
+                    {% if request.GET.sort_by == value %}checked{% endif %}>
+                {{ label }}
             </label>
             {% endfor %}
 

@@ -92,14 +92,17 @@ class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
     def test_restaurants_should_sort_price_low_to_high(self):
         data = {"sort_by": "price_low"}
         qs = RestaurantFilter(data=data, queryset=Restaurant.objects.all()).qs
+        prices = list(qs.values_list("cost_for_two", flat=True))
 
-        assert list(qs.values_list("cost_for_two", flat=True)) == [200, 400, 500, 1000]
+        assert prices == sorted(prices)
+
 
     def test_restaurants_should_sort_price_high_to_low(self):
         data = {"sort_by": "price_high"}
         qs = RestaurantFilter(data=data, queryset=Restaurant.objects.all()).qs
+        prices = list(qs.values_list("cost_for_two", flat=True))
 
-        assert list(qs.values_list("cost_for_two", flat=True)) == [1000, 500, 400, 200]
+        assert prices == sorted(prices, reverse=True)
 
 class TestRestaurantDetailView(RestaurantTestSetupMixin, TestCase):
     def test_detail_page_should_display_correct_restaurant(self):

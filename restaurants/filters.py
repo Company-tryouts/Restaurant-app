@@ -27,7 +27,9 @@ class RestaurantFilter(django_filters.FilterSet):
         choices=[
             ('price_low', 'Low → High'),
             ('price_high', 'High → Low'),
-        ])
+        ],
+        empty_label=None
+    )
 
     class Meta:
         model = Restaurant
