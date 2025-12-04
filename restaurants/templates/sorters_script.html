@@ -1,0 +1,38 @@
+<script>
+const mainBtn = document.getElementById("sortBtn");
+const mainMenu = document.getElementById("sortDropdown");
+const toggleButtons = document.querySelectorAll("[data-toggle]");
+const dropdowns = document.querySelectorAll("[data-dropdown]");
+
+mainBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    mainMenu.classList.toggle("hidden");
+
+    if (mainMenu.classList.contains("hidden")) {
+        dropdowns.forEach(d => d.classList.add("hidden"));
+    }
+});
+
+toggleButtons.forEach(button => {
+    button.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const target = button.dataset.toggle;
+
+        dropdowns.forEach(drop => {
+            if (drop.dataset.dropdown === target) {
+                drop.classList.toggle("hidden");
+            } else {
+                drop.classList.add("hidden");
+            }
+        });
+    });
+});
+
+document.addEventListener("click", () => {
+    mainMenu.classList.add("hidden");
+    dropdowns.forEach(d => d.classList.add("hidden"));
+});
+
+mainMenu.addEventListener("click", (e) => e.stopPropagation());
+dropdowns.forEach(d => d.addEventListener("click", (e) => e.stopPropagation()));
+</script>

@@ -1,8 +1,9 @@
 from django.urls import reverse
 from django.test import TestCase
-from .models import Bookmark, Visited, Review
+from .models import Bookmark, Visited, Review, Restaurant
 from restaurants.test_restaurants.mixins import RestaurantTestSetupMixin
 from django.contrib.auth.models import User
+from restaurants.filters import RestaurantFilter
 
 class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
     def test_list_page_should_load_restaurants(self):
@@ -88,6 +89,20 @@ class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
         for r in included:
             self.assertContains(response, r.name)
 
+    def test_restaurants_should_sort_price_low_to_high(self):
+        data = {"sort_by": "price_low"}
+        qs = RestaurantFilter(data=data, queryset=Restaurant.objects.all()).qs
+        prices = list(qs.values_list("cost_for_two", flat=True))
+
+        assert prices == sorted(prices)
+
+
+    def test_restaurants_should_sort_price_high_to_low(self):
+        data = {"sort_by": "price_high"}
+        qs = RestaurantFilter(data=data, queryset=Restaurant.objects.all()).qs
+        prices = list(qs.values_list("cost_for_two", flat=True))
+
+        assert prices == sorted(prices, reverse=True)
 
 class TestRestaurantDetailView(RestaurantTestSetupMixin, TestCase):
     def test_detail_page_should_display_correct_restaurant(self):

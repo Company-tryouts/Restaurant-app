@@ -1,0 +1,9 @@
+<div class="relative inline-block">
+    <button id="sortBtn" class="text-gray-300 hover:text-yellow-400">
+        <i class="bi bi-arrow-down-up text-xl"></i>
+    </button>
+
+    <div id="sortDropdown" class="absolute right-0 w-40 bg-gray-800 text-white rounded shadow-lg hidden z-50">
+        {% include "sort_dropdown_option.html" with button_id="sortPriceBtn" dropdown_id="sortPriceDropdown" title="Price" filter=filter %}
+    </div>
+</div>
