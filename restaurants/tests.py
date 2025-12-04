@@ -120,6 +120,25 @@ class TestRestaurantListView(RestaurantTestSetupMixin, TestCase):
         ratings = list(qs.values_list("average_rating", flat=True))
         assert ratings == sorted(ratings)
 
+    def test_filter_returns_only_spotlight_restaurants_using_filterset(self):
+        filtered_queryset = RestaurantFilter(
+            data={"is_spotlight": "true"},
+            queryset=Restaurant.objects.all()
+        ).qs
+
+        result_names = list(filtered_queryset.values_list("name", flat=True))
+
+        expected_spotlight = [
+            r.name for r in self.restaurants if r.is_spotlight
+        ]
+
+        self.assertCountEqual(
+            result_names,
+            expected_spotlight,
+            msg=f"Expected spotlight restaurants {expected_spotlight}, but got {result_names}"
+        )
+
+
 
 class TestRestaurantDetailView(RestaurantTestSetupMixin, TestCase):
     def test_detail_page_should_display_correct_restaurant(self):
